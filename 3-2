@@ -1,0 +1,305 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp2
+{
+    abstract class Arr
+    {
+        abstract public void WriteArray();
+        abstract public double AVG();
+    }
+
+
+    sealed class OneDimentioal : Arr
+    {
+        private int[] Masiv;
+        public OneDimentioal(int n)
+        {
+            Console.WriteLine("Введите количество элементов в массиве");
+            int len = int.Parse(Console.ReadLine());
+            int[] array = new int[len];
+            if (n == 1)
+            {
+                Random r = new Random();
+                for (int i = 0; i < len; i++)
+                {
+                    array[i] = r.Next(-200, 200);
+                }
+            }
+            else
+            {
+
+                for (int i = 0; i < len; i++)
+                {
+                    Console.WriteLine("Введите " + (i + 1) + "-й элемент массива");
+                    array[i] = int.Parse(Console.ReadLine());
+                }
+
+            }
+            this.Masiv = array;
+        }
+        public OneDimentioal(int[] n) //конструктор для задач с удалением
+        {
+            this.Masiv = n;
+        }
+        public override void WriteArray()
+        {
+            for (int i = 0; i < Masiv.Length; i++)
+            {
+                Console.Write(Masiv[i] + " ");
+            }
+            Console.WriteLine();
+        }
+        public override double AVG()
+        {
+            int summ = 0;
+            for (int i = 0; i < Masiv.Length; i++)
+            {
+                summ += Masiv[i];
+            }
+            double avg = (double)summ / (double)Masiv.Length;
+            return avg;
+        }
+        public int[] deleteBig()
+        {
+            int len = Masiv.Length;
+            for (int i = 0; i < len; i++)
+            {
+                if (Masiv[i] > 100 || Masiv[i] < -100)
+                {
+                    int l = i;
+                    while (l < len - 1)
+                    {
+                        Masiv[l] = Masiv[l + 1];
+                        l += 1;
+                    }
+                    len -= 1;
+                    i -= 1;
+                }
+            }
+            int[] newArr = new int[len];
+            for (int i = 0; i < len; i++)
+            {
+                newArr[i] = Masiv[i];
+            }
+            return newArr;
+        }
+        public int[] doUniq()
+        {
+            int counter = 0;
+            int[] uniqs = new int[Masiv.Length];
+            for (int i = 0; i < Masiv.Length; i++)
+            {
+                uniqs[i] = -10000;
+            }
+            for (int i = 0; i < Masiv.Length; i++)
+            {
+                bool flag = true;
+                for (int j = 0; j < uniqs.Length; j++)
+                {
+                    if (uniqs[j] == Masiv[i])
+                    {
+                        flag = false;
+                    }
+                }
+                if (flag)
+                {
+                    uniqs[counter] = Masiv[i];
+                    counter++;
+                }
+            }//uniqs - все уникальные значения из arr
+            int[] answer = new int[counter];
+            for (int i = 0; i < answer.Length; i++)
+            {
+                answer[i] = uniqs[i];
+            }
+            return answer;
+        }
+    }
+
+    sealed class Twodimentioal : Arr
+    {
+        private int[,] Masiv;
+        public Twodimentioal(int[,] a)
+        {
+            Masiv = a;
+        }
+        public Twodimentioal(int n)
+        {
+            Console.WriteLine("Введите количество строк в массиве");
+            int a = int.Parse(Console.ReadLine());
+            Console.WriteLine("Введите количество столбцов в массиве");
+            int b = int.Parse(Console.ReadLine());
+            Masiv = new int[a, b];
+            if (n == 1)
+            {
+                Random r = new Random();
+                for (int i = 0; i < Masiv.GetLength(0); i++)
+                {
+                    for (int j = 0; j < Masiv.GetLength(1); j++)
+                    {
+                        Masiv[i, j] = r.Next(-200, 200);
+                    }
+                }
+            }
+            else
+            {
+                int count = 1;
+                for (int i = 0; i < Masiv.GetLength(0); i++)
+                {
+                    for (int j = 0; j < Masiv.GetLength(1); j++)
+                    {
+                        Console.WriteLine("Введите " + count + "-й элемент массива");
+                        Masiv[i, j] = int.Parse(Console.ReadLine());
+                        count++;
+                    }
+                }
+            }
+        }
+        public override void WriteArray()
+        {
+            for (int i = 0; i < Masiv.GetLength(0); i++)
+            {
+                for (int j = 0; j < Masiv.GetLength(1); j++)
+                {
+                    Console.Write(Masiv[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
+        public override double AVG()
+        {
+            int c = 0;
+            int s = 0;
+            foreach(int n in Masiv)
+            {
+                s += n;
+                c++;
+            }
+            return (double)s/c;
+        }
+    }
+
+    sealed class JaggedArrays : Arr
+    {
+        private int[][] jaggedArrays;
+        public JaggedArrays(int rows, int cols, int n)
+        {
+            jaggedArrays = new int[rows][];
+            for (int i = 0; i < rows; i++)
+            {
+                jaggedArrays[i] = new int[cols];
+            }
+            if (n == 1)
+            {
+                FillArrayRandom();
+            }
+            else
+            {
+                FillByUser();
+            }
+        }
+
+        public void FillArrayRandom()
+        {
+            Random random = new Random();
+            for (int i = 0; i < jaggedArrays.Length; i++)
+            {
+                for (int j = 0; j < jaggedArrays[i].Length; j++)
+                {
+                    jaggedArrays[i][j] = random.Next(100);
+                }
+            }
+        }
+
+        public void FillByUser()
+        {
+            for (int i = 0; i < jaggedArrays.Length; i++)
+            {
+                Console.WriteLine($"Введите {jaggedArrays[i].Length} элемента для строки {i + 1} через enter:");
+                for (int j = 0; j < jaggedArrays[i].Length; j++)
+                {
+                    jaggedArrays[i][j] = int.Parse(Console.ReadLine());
+                }
+            }
+        }
+
+        public override void WriteArray()
+        {
+            Console.WriteLine("Зубчатый массив:");
+            for (int i = 0; i < jaggedArrays.Length; i++)
+            {
+                for (int j = 0; j < jaggedArrays[i].Length; j++)
+                {
+                    Console.Write(jaggedArrays[i][j] + " ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        public override double AVG()
+        {
+            int sum = 0;
+            int count = 0;
+            for (int i = 0; i < jaggedArrays.Length; i++)
+            {
+                for (int j = 0; j < jaggedArrays[i].Length; j++)
+                {
+                    sum += jaggedArrays[i][j];
+                    count++;
+                }
+            }
+
+            return (double)sum / count;
+        }
+
+        public double[] Average2()
+        {
+            double[] averages = new double[jaggedArrays.Length];
+            for (int i = 0; i < jaggedArrays.Length; i++)
+            {
+                int sum = 0;
+                int count = 0;
+                for (int j = 0; j < jaggedArrays[i].Length; j++)
+                {
+                    sum += jaggedArrays[i][j];
+                    count++;
+                }
+
+                averages[i] = (double)sum / count;
+            }
+
+            return averages;
+        }
+    }
+
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            var list = new List<Arr>(3);
+
+            Console.WriteLine("Если хотите заполнить массив случайными числами введите 1, если хотите ввести вручную, то введите любое другое число");
+            OneDimentioal a = new OneDimentioal(int.Parse(Console.ReadLine()));
+            list.Add(a);
+
+            Console.WriteLine("Если хотите заполнить двумерный массив случайными числами введите 1, если хотите ввести вручную, то введите любое другое число");
+            Twodimentioal b = new Twodimentioal(int.Parse(Console.ReadLine()));
+            list.Add(b);
+
+            Console.WriteLine("Если хотите заполнить зубчатый массив случайными числами введите 1, если хотите ввести вручную, то введите любое другое число");
+            JaggedArrays c = new JaggedArrays(2, 3, int.Parse(Console.ReadLine()));
+            list.Add(c);
+
+            foreach (Arr arr in list)
+            {
+                Console.WriteLine("Среднее значение в массиве - " + arr.AVG());
+                arr.WriteArray();
+            }
+        }
+    }
+}
